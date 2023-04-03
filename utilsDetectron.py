@@ -42,7 +42,7 @@ def save_dataset_metadata(dataset_name, save_metadata_dir):
 
 
 
-def get_train_cfg(config_file_path, checkpoint_url, train_dataset_name, test_dataset_name, num_classes, device, output_dir):
+def get_train_cfg(config_file_path, checkpoint_url, train_dataset_name, test_dataset_name, num_classes, device, output_dir, file_writer):
     cfg = get_cfg()
     
     cfg.merge_from_file(model_zoo.get_config_file(config_file_path))
@@ -51,15 +51,23 @@ def get_train_cfg(config_file_path, checkpoint_url, train_dataset_name, test_dat
     cfg.DATASETS.TEST = (test_dataset_name,)
     
     cfg.DATALOADER.NUM_WORKERS = 2
-    cfg.SOLVER.IMS_PER_BATCH = 2
+    cfg.SOLVER.IMS_PER_BATCH = 4
     cfg.SOLVER.BASE_LR = 0.00025
-    cfg.SOLVER.MAX_ITER = 1000
+    cfg.SOLVER.MAX_ITER = 5000
     cfg.SOLVER.STEPS = []
     cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = 128   # The "RoIHead batch size" (default: 512)
 
     cfg.MODEL.ROI_HEADS.NUM_CLASSES = num_classes
     cfg.MODEL.DEVICE = device
     cfg.OUTPUT_DIR = output_dir
+
+    # Write to file
+    file_writer.write("cfg.DATALOADER.NUM_WORKERS = " + str(cfg.DATALOADER.NUM_WORKERS) + "\n")
+    file_writer.write("cfg.SOLVER.IMS_PER_BATCH = " + str(cfg.SOLVER.IMS_PER_BATCH) + "\n")
+    file_writer.write("cfg.SOLVER.BASE_LR = " + str(cfg.SOLVER.BASE_LR) + "\n")
+    file_writer.write("cfg.SOLVER.MAX_ITER = " + str(cfg.SOLVER.MAX_ITER) + "\n")
+    file_writer.write("cfg.SOLVER.STEPS = " + str(cfg.SOLVER.STEPS) + "\n")
+    file_writer.write("cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = " + str(cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE) + "\n\n")
 
     return cfg
 
