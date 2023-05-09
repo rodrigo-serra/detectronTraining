@@ -15,9 +15,11 @@ from utilsDetectron import *
 
 # PLEASE FILL THIS INFORMATION REGARDING THE DATASET
 dt_name = "Bags"
-dt_location = "(local, rodrigo laptop), /home/rodrigo/Development/datasets/bags"
-dt_total_num_imgs = 206
-dt_classes = ["bag", "bagHandle"]
+# dt_location = "(local, rodrigo laptop), /home/rodrigo/Development/datasets/fnr2023"
+dt_location = "(roboflow) Door Handles"
+dt_total_num_imgs = 345
+# dt_classes = ["milk", "cerealBox", "can", "box", "bowl", "spoon"]
+dt_classes = ["doorHandle"]
 
 dt_train_dir = os.getcwd() + "/dataset/train"
 dt_train_imgs = int(len([entry for entry in os.listdir(dt_train_dir) if os.path.isfile(os.path.join(dt_train_dir, entry))]) / 2)

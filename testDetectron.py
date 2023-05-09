@@ -56,7 +56,7 @@ dataset_metadata = MetadataCatalog.get(cfg.DATASETS.TRAIN[0])
 predictor = DefaultPredictor(cfg)
 
 if not runVideo:
-    img_path = "dataset/test/img_12.png"
+    img_path = "dataset/test/image_182_jpg.rf.c506e7f901197e7d9fe8fb0253255c62.jpg"
     on_image(img_path, predictor, dataset_metadata)
 else:
     video_path = ""
