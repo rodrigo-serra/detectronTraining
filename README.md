@@ -2,11 +2,15 @@
 1) Label images using the Roboflow Platform (train, test, and validation images);
 
 2) Use the Roboflow API properties to automatically download the dataset to your current directory. Press "Export Dataset" and click on "Continue" to "show download code".
-<div style="display:flex;align-items:center;justify-content:center;margin-bottom:30px">
-<!-- <img src="./imgs/roboflow_export_dataset.png" alt="Alt text" title="Optional title" width="50%" style="display:block;margin-left:auto;margin-right:auto;"> -->
-<img src="./imgs/roboflow_export_dataset.png" alt="Alt text" title="Optional title" width="50%" style="margin-right:20px">
-<img src="./imgs/roboflow_api.png" alt="Alt text" title="Optional title" width="20%">
-</div>
+
+<!-- <div style="display:flex;align-items:center;justify-content:center;margin-bottom:30px">
+    <img src="./imgs/roboflow_export_dataset.png" alt="Alt text" title="Optional title" width="50%" style="margin-right:20px">
+    <img src="./imgs/roboflow_api.png" alt="Alt text" title="Optional title" width="20%">
+</div> -->
+
+Export Dataset in Roboflow            |  Roboflow API
+:-------------------------:|:-------------------------:
+![](./imgs/roboflow_export_dataset.png)  |  ![](./imgs/roboflow_api.png)
 
 3) Copy the code from the previous step to the script train.py (DOWNLOAD DATASET FROM ROBOFLOW section in train.py).
 
