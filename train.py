@@ -39,7 +39,7 @@ if os.path.exists(MODEL_DIR):
 # DOWNLOAD DATASET FROM ROBOFLOW
 rf = Roboflow(api_key="QO1iBTAWSmIJ28ZyKyVr")
 project = rf.workspace("socrob").project("door-handles")
-dataset = project.version(7).download("coco-segmentation")
+dataset = project.version(9).download("coco-segmentation")
 
 DATA_SET_NAME = dataset.name.replace(" ", "-")
 ANNOTATIONS_FILE_NAME = "_annotations.coco.json"
@@ -130,10 +130,16 @@ with open(METADATA_DIR, "w") as outfile:
 # HYPERPARAMETERS
 ARCHITECTURE = "mask_rcnn_R_101_FPN_3x"
 CONFIG_FILE_PATH = f"COCO-InstanceSegmentation/{ARCHITECTURE}.yaml"
-MAX_ITER = 1000
+NUM_WORKERS = 2
+IMS_PER_BATCH = 4
+MAX_ITER = 3000
+BATCH_SIZE_PER_IMAGE = 128
 EVAL_PERIOD = 200
-BASE_LR = 0.001
-NUM_CLASSES = 3
+BASE_LR = 0.00025
+
+NUM_CLASSES = len(dictionary["thing_classes"])
+#NUM_CLASSES = 2
+
 CFG_PATH = os.getcwd() + "/model/IS_cfg.pickle"
 
 # OUTPUT_DIR_PATH = os.path.join("model", DATA_SET_NAME, ARCHITECTURE, datetime.now().strftime('%Y-%m-%d-%H-%M-%S'))
@@ -145,19 +151,78 @@ cfg.merge_from_file(model_zoo.get_config_file(CONFIG_FILE_PATH))
 cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url(CONFIG_FILE_PATH)
 cfg.DATASETS.TRAIN = (TRAIN_DATA_SET_NAME,)
 cfg.DATASETS.TEST = (TEST_DATA_SET_NAME,)
-cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = 64
-cfg.TEST.EVAL_PERIOD = EVAL_PERIOD
-cfg.DATALOADER.NUM_WORKERS = 2
-cfg.SOLVER.IMS_PER_BATCH = 2
-cfg.INPUT.MASK_FORMAT='bitmask'
+
+cfg.DATALOADER.NUM_WORKERS = NUM_WORKERS
+cfg.SOLVER.IMS_PER_BATCH = IMS_PER_BATCH
 cfg.SOLVER.BASE_LR = BASE_LR
 cfg.SOLVER.MAX_ITER = MAX_ITER
+cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = BATCH_SIZE_PER_IMAGE
+
 cfg.MODEL.ROI_HEADS.NUM_CLASSES = NUM_CLASSES
 cfg.OUTPUT_DIR = OUTPUT_DIR_PATH
+
+cfg.TEST.EVAL_PERIOD = EVAL_PERIOD
+cfg.INPUT.MASK_FORMAT='bitmask'
 
 # SAVE CONFIGS IN PICKLE FILE
 with open(CFG_PATH, "wb") as f:
     pickle.dump(cfg, f, protocol = pickle.HIGHEST_PROTOCOL)
+
+
+# SAVE TRAINING INFO
+FILE_NAME = MODEL_DIR + "/trained_model_info.txt"
+
+dt_classes = dictionary["thing_classes"]
+
+dt_train_imgs = int(len([entry for entry in os.listdir(TRAIN_DATA_SET_IMAGES_DIR_PATH) if os.path.isfile(os.path.join(TRAIN_DATA_SET_IMAGES_DIR_PATH, entry))]) - 1)
+dt_test_imgs = int(len([entry for entry in os.listdir(TEST_DATA_SET_IMAGES_DIR_PATH) if os.path.isfile(os.path.join(TEST_DATA_SET_IMAGES_DIR_PATH, entry))]) - 1)
+dt_valid_imgs = int(len([entry for entry in os.listdir(VALID_DATA_SET_IMAGES_DIR_PATH) if os.path.isfile(os.path.join(VALID_DATA_SET_IMAGES_DIR_PATH, entry))]) - 1)
+
+dt_total_num_imgs = dt_train_imgs + dt_test_imgs + dt_valid_imgs
+
+f = open(FILE_NAME, "a")
+
+f.write("Dataset Info\n\n")
+f.write("Name: " + DATA_SET_NAME + "\n")
+f.write("Location: Roboflow\n")
+f.write("Number of Images: " + str(dt_total_num_imgs) + " images\n")
+f.write("Training: " + str(dt_train_imgs) + " images\n")
+f.write("Test: " + str(dt_test_imgs) + " images\n")
+f.write("Valid: " + str(dt_valid_imgs) + " images\n")
+f.write("Classes: " + str(dt_classes) + "\n")
+f.write("\n")
+f.write("#################################################\n\n")
+
+f.write("Training Info\n\n")
+f.write("config_file_path = " + CONFIG_FILE_PATH + "\n")
+f.write("checkpoint_url = " + CONFIG_FILE_PATH + "\n")
+f.write("output_dir = " + OUTPUT_DIR_PATH + "\n")
+f.write("cfg_save_path = " + CFG_PATH + "\n\n")
+
+f.write("num_classes = " + str(len(dictionary["thing_classes"])) + "\n")
+
+f.write("train_dataset_name = " + TRAIN_DATA_SET_NAME + "\n")
+f.write("train_images_path = " + TRAIN_DATA_SET_IMAGES_DIR_PATH + "\n")
+f.write("train_json_annot_path = " + TRAIN_DATA_SET_ANN_FILE_PATH + "\n\n")
+
+f.write("valid_dataset_name = " + VALID_DATA_SET_NAME + "\n")
+f.write("valid_images_path = " + VALID_DATA_SET_IMAGES_DIR_PATH + "\n")
+f.write("valid_json_annot_path = " + VALID_DATA_SET_ANN_FILE_PATH + "\n\n")
+
+f.write("test_dataset_name = " + TEST_DATA_SET_NAME + "\n")
+f.write("test_images_path = " + TEST_DATA_SET_IMAGES_DIR_PATH + "\n")
+f.write("test_json_annot_path = " + TEST_DATA_SET_ANN_FILE_PATH + "\n\n")
+
+f.write("save_metadata_dir = " + METADATA_DIR + "\n\n")
+
+f.write("cfg.DATALOADER.NUM_WORKERS = " + str(cfg.DATALOADER.NUM_WORKERS) + "\n")
+f.write("cfg.SOLVER.IMS_PER_BATCH = " + str(cfg.SOLVER.IMS_PER_BATCH) + "\n")
+f.write("cfg.SOLVER.BASE_LR = " + str(cfg.SOLVER.BASE_LR) + "\n")
+f.write("cfg.SOLVER.MAX_ITER = " + str(cfg.SOLVER.MAX_ITER) + "\n")
+f.write("cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = " + str(cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE) + "\n\n")
+f.write("cfg.TEST.EVAL_PERIOD = " + str(cfg.TEST.EVAL_PERIOD) + "\n")
+f.write("cfg.INPUT.MASK_FORMAT = " + cfg.INPUT.MASK_FORMAT + "\n")
+
 
 
 # TRAIN MODEL

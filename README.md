@@ -23,7 +23,11 @@ Export Dataset in Roboflow            |  Roboflow API
 6) Load the model in the detectron2 node and make sure it works;
 
 </br>
-Notes: After the training process, your detectronTraining directory should look more or less like this. One folder for the dataset (e.g. Door-Handles-7), and for the model. The latter is the one you should upload to the detectron2_ros package.
+Notes: 
+
+- After the training process, your detectronTraining directory should look more or less like this. One folder for the dataset (e.g. Door-Handles-7), and for the model. The latter is the one you should upload to the detectron2_ros package;
+
+- The file **trained_model_info.txt** has all the information regarding training;
 
 ```bash
 .
@@ -59,6 +63,7 @@ Notes: After the training process, your detectronTraining directory should look 
 ├── model
 │   ├── dataset_metadata.json
 │   ├── IS_cfg.pickle
+│   ├── trained_model_info.txt
 │   └── output
 │       └── instance_segmentation
 │           ├── events.out.tfevents.1683803640.dolores2.1669923.0
