@@ -12,9 +12,9 @@ Export Dataset in Roboflow            |  Roboflow API
 :-------------------------:|:-------------------------:
 ![](./imgs/roboflow_export_dataset.png)  |  ![](./imgs/roboflow_api.png)
 
-3) Copy the code from the previous step to the script train.py (DOWNLOAD DATASET FROM ROBOFLOW section in train.py).
+3) Copy the code from the previous step to the script train.py (**DOWNLOAD DATASET FROM ROBOFLOW** section in train.py).
 
-4) Set the model configurations in train.py (HYPERPARAMETERS section in train.py).
+4) Set the model configurations in train.py (**HYPERPARAMETERS** section in train.py).
 
 5) Run the train.py.
 
