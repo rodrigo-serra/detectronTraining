@@ -22,43 +22,50 @@ Export Dataset in Roboflow            |  Roboflow API
 
 6) Load the model in the detectron2 node and make sure it works;
 
-
-Notes:
-
+</br>
+Notes: After the training process, your detectronTraining directory should look more or less like this. One folder for the dataset (e.g. Door-Handles-7), and for the model. The latter is the one you should upload to the detectron2_ros package.
 
 ```bash
 .
-├── dataset
+├── colab
+│   └── colabScript.py
+├── Door-Handles-7
+│   ├── README.dataset.txt
+│   ├── README.roboflow.txt
 │   ├── test
-│   │   ├── img_21.json
-│   │   ├── img_21.png
-│   │   ├── img_22.json
-│   │   ├── img_22.png
-│   │   ├── img_23.json
-│   │   ├── img_23.png
-│   ├── test.json
+│   │   ├── _annotations.coco.json
+│   │   ├── image_129_jpg.rf.7860cfd7ffaa9943a02cfa4c40b0ab2f.jpg
+│   │   ├── image_130_jpg.rf.6ae113d91f522025ec7a31a01a325485.jpg
+│   │   ├── ...
 │   ├── train
-│   │   ├── img_0.json
-│   │   ├── img_0.png
-│   │   ├── img_10.json
-│   │   ├── img_10.png
-│   │   ├── img_11.json
-│   │   ├── img_11.png
-│   │   ├── img_12.json
-│   │   ├── img_12.png
-│   └── train.json
-├── labelme2coco.py
+│   │   ├── _annotations.coco.json
+│   │   ├── Image_00198_jpg.rf.ba6335ad493d8a47f0b0ce52fcba434c.jpg
+│   │   ├── image_0_jpg.rf.bd5bafa7ecd4e24cf31393195989b441.jpg
+│   │   ├── ...
+│   └── valid
+│       ├── _annotations.coco.json
+│       ├── image_148_jpg.rf.d743315c5a9e81a9a0c9b690becaccc7.jpg
+│       ├── image_154_jpg.rf.bbf75497b1057f0732b271197c03acff.jpg
+│       ├── ...
+├── imgs
+│   ├── roboflow_api.png
+│   └── roboflow_export_dataset.png
+├── labelme_scripts_training
+│   ├── labelme2coco.py
+│   ├── README.md
+│   ├── testDetectron.py
+│   ├── trainDetectron.py
+│   └── utilsDetectron.py
 ├── model
 │   ├── dataset_metadata.json
 │   ├── IS_cfg.pickle
 │   └── output
 │       └── instance_segmentation
-│           ├── events.out.tfevents.1675938979.6e88c4b466e0.217.0
+│           ├── events.out.tfevents.1683803640.dolores2.1669923.0
 │           ├── last_checkpoint
 │           ├── metrics.json
 │           └── model_final.pth
 ├── README.md
-├── testDetectron.py
-├── trainDetectron.py
-└── utilsDetectron.py
+├── test.py
+└── train.py
 ```
