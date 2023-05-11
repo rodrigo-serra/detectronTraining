@@ -36,7 +36,7 @@ if os.path.exists(MODEL_DIR):
     print("Deleting Model Folder!")
 
 
-# Download dataset from Roboflow
+# DOWNLOAD DATASET FROM ROBOFLOW
 rf = Roboflow(api_key="QO1iBTAWSmIJ28ZyKyVr")
 project = rf.workspace("socrob").project("door-handles")
 dataset = project.version(7).download("coco-segmentation")
@@ -136,7 +136,6 @@ BASE_LR = 0.001
 NUM_CLASSES = 3
 CFG_PATH = os.getcwd() + "/model/IS_cfg.pickle"
 
-# OUTPUT DIR
 # OUTPUT_DIR_PATH = os.path.join("model", DATA_SET_NAME, ARCHITECTURE, datetime.now().strftime('%Y-%m-%d-%H-%M-%S'))
 OUTPUT_DIR_PATH = "model/output/instance_segmentation"
 os.makedirs(OUTPUT_DIR_PATH, exist_ok=True)
