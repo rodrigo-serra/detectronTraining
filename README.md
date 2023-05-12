@@ -16,6 +16,17 @@ Export Dataset in Roboflow            |  Roboflow API
 
 4) Set the model configurations in train.py (**HYPERPARAMETERS** section in train.py).
 
+```bash
+ARCHITECTURE = "mask_rcnn_R_101_FPN_3x"
+CONFIG_FILE_PATH = f"COCO-InstanceSegmentation/{ARCHITECTURE}.yaml"
+NUM_WORKERS = 2
+IMS_PER_BATCH = 4
+MAX_ITER = 3000
+BATCH_SIZE_PER_IMAGE = 128
+EVAL_PERIOD = 200
+BASE_LR = 0.00025
+```
+
 5) Run the train.py.
 
 6) When the training proccess is done, run the test.py script. This give you an idea of the model performance.
