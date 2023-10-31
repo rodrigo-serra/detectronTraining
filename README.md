@@ -12,9 +12,9 @@ Export Dataset in Roboflow            |  Roboflow API
 :-------------------------:|:-------------------------:
 ![](./imgs/roboflow_export_dataset.png)  |  ![](./imgs/roboflow_api.png)
 
-3) Copy the code from the previous step to the script train.py (**DOWNLOAD DATASET FROM ROBOFLOW** section in train.py).
+3) Copy the code from the previous step to the script train.py (**DOWNLOAD DATASET FROM ROBOFLOW** section in ```train.py```).
 
-4) Set the model configurations in train.py (**HYPERPARAMETERS** section in train.py).
+4) Set the model configurations in train.py (**HYPERPARAMETERS** section in ```train.py```).
 
 ```bash
 ARCHITECTURE = "mask_rcnn_R_101_FPN_3x"
@@ -27,18 +27,25 @@ EVAL_PERIOD = 200
 BASE_LR = 0.00025
 ```
 
-5) Run the train.py.
+5) It's recommend to run the training process on a virtual environment. In the case of the SocRob, we train our models on the Dolores server. To activate its virtual environment (```myenv```) type the command illustrated below.
+```
+source myenv/bin/activate
+```
 
-6) When the training proccess is done, run the test.py script. This give you an idea of the model performance.
 
-6) Load the model in the detectron2 node and make sure it works;
+6) Run the ```train.py```.
+
+7) When the training proccess is done, run the ```test.py``` script. This give you an idea of the model performance.
+
+8) If you trained the model on the Dolores server, it's recommend to zip the ```model``` folder and add to One Drive or Goolgle Drive. One can then download it from the cloud and unzip it within the ```model``` folder of the ```detectron2_ros``` package.
+If you have trained it locally, it's just a matter of copying the ```model``` folder to the respective place.
 
 </br>
 Notes: 
 
-- After the training process, your detectronTraining directory should look more or less like this. One folder for the dataset (e.g. Door-Handles-7), and for the model. The latter is the one you should upload to the detectron2_ros package;
+- After the training process, your detectronTraining directory should look more or less like this. One folder for the dataset (e.g. Door-Handles-7), and one for the model;
 
-- The file **trained_model_info.txt** has all the information regarding training;
+- The file ```trained_model_info.txt``` has all the information regarding training;
 
 ```bash
 .
