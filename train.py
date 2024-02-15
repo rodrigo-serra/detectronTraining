@@ -37,9 +37,15 @@ if os.path.exists(MODEL_DIR):
 
 
 # DOWNLOAD DATASET FROM ROBOFLOW
+# YCB Testbed Simulation
+# rf = Roboflow(api_key="QO1iBTAWSmIJ28ZyKyVr")
+# project = rf.workspace("socrob").project("simulation-ycb")
+# dataset = project.version(1).download("coco-segmentation")
+
+# ISR Real Testbed Dataset
 rf = Roboflow(api_key="QO1iBTAWSmIJ28ZyKyVr")
-project = rf.workspace("socrob").project("door-handles")
-dataset = project.version(9).download("coco-segmentation")
+project = rf.workspace("socrob").project("testbed_isr")
+dataset = project.version(1).download("coco-segmentation")
 
 DATA_SET_NAME = dataset.name.replace(" ", "-")
 ANNOTATIONS_FILE_NAME = "_annotations.coco.json"
@@ -132,7 +138,7 @@ ARCHITECTURE = "mask_rcnn_R_101_FPN_3x"
 CONFIG_FILE_PATH = f"COCO-InstanceSegmentation/{ARCHITECTURE}.yaml"
 NUM_WORKERS = 2
 IMS_PER_BATCH = 4
-MAX_ITER = 3000
+MAX_ITER = 100000
 BATCH_SIZE_PER_IMAGE = 128
 EVAL_PERIOD = 200
 BASE_LR = 0.00025
