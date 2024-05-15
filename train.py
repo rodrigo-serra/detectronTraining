@@ -43,9 +43,31 @@ if os.path.exists(MODEL_DIR):
 # dataset = project.version(1).download("coco-segmentation")
 
 # ISR Real Testbed Dataset
+# rf = Roboflow(api_key="QO1iBTAWSmIJ28ZyKyVr")
+# project = rf.workspace("socrob").project("testbed_isr")
+# dataset = project.version(1).download("coco-segmentation")
+
+# @Home Objects Image Dataset (our version)
+# rf = Roboflow(api_key="y89YpC5cZeg7ZOlBJbJW")
+# project = rf.workspace("socrobdatasets").project("fnr24-dataset")
+# version = project.version(1)
+# dataset = version.download("coco-segmentation")
+
+
+# FNR24 Dataset (our version)
+# rf = Roboflow(api_key="QO1iBTAWSmIJ28ZyKyVr")
+# project = rf.workspace("socrob").project("fnr24-socrob-dataset")
+# version = project.version(1)
+# dataset = version.download("coco-segmentation")
+
+# FNR24 Dataset shoes and holding drinks (our version)
 rf = Roboflow(api_key="QO1iBTAWSmIJ28ZyKyVr")
-project = rf.workspace("socrob").project("testbed_isr")
-dataset = project.version(1).download("coco-segmentation")
+project = rf.workspace("socrob").project("fnr24-socrob-dataset")
+version = project.version(2)
+dataset = version.download("coco-segmentation")
+
+
+
 
 DATA_SET_NAME = dataset.name.replace(" ", "-")
 ANNOTATIONS_FILE_NAME = "_annotations.coco.json"
