@@ -139,11 +139,6 @@ cfg.SOLVER.STEPS = (30000, 60000)
 cfg.SOLVER.GAMMA = 0.1
 ```
 
-- Adjust Steps: Modify learning rate steps and gamma for learning rate decay.
-```
-cfg.SOLVER.STEPS = (30000, 60000)
-cfg.SOLVER.GAMMA = 0.1
-```
 
 #### 2. Batch Size and Workers
 - Increase Batch Size: If you have enough GPU memory, increase the batch size.
