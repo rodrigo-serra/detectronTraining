@@ -156,6 +156,8 @@ with open(METADATA_DIR, "w") as outfile:
 
 
 # HYPERPARAMETERS
+RESUME_TRAINING = False
+
 ARCHITECTURE = "mask_rcnn_R_101_FPN_3x"
 CONFIG_FILE_PATH = f"COCO-InstanceSegmentation/{ARCHITECTURE}.yaml"
 
@@ -185,7 +187,28 @@ os.makedirs(OUTPUT_DIR_PATH, exist_ok=True)
 cfg = get_cfg()
 cfg.merge_from_file(model_zoo.get_config_file(CONFIG_FILE_PATH))
 
-cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url(CONFIG_FILE_PATH)
+cfg.OUTPUT_DIR = OUTPUT_DIR_PATH
+
+
+
+if RESUME_TRAINING:
+    # Assuming the path to the last checkpoint file
+    last_checkpoint = os.path.join(cfg.OUTPUT_DIR, "last_checkpoint")
+
+    # Read the path of the last checkpoint
+    if os.path.exists(last_checkpoint):
+        with open(last_checkpoint, "r") as f:
+            last_checkpoint_path = f.read().strip()
+
+    # Print the checkpoint path for verification
+    print(f"Resuming from checkpoint: {last_checkpoint_path}")
+
+    # Update the config to load the last checkpoint
+    cfg.MODEL.WEIGHTS = last_checkpoint_path
+else:
+    cfg.MODEL.WEIGHTS = model_zoo.get_checkpoint_url(CONFIG_FILE_PATH)
+
+
 
 cfg.DATASETS.TRAIN = (TRAIN_DATA_SET_NAME,)
 cfg.DATASETS.TEST = (TEST_DATA_SET_NAME,)
@@ -204,8 +227,6 @@ cfg.SOLVER.AMP.ENABLED = AMP_ENABLED
 
 cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = BATCH_SIZE_PER_IMAGE
 cfg.MODEL.ROI_HEADS.NUM_CLASSES = NUM_CLASSES
-
-cfg.OUTPUT_DIR = OUTPUT_DIR_PATH
 
 cfg.TEST.EVAL_PERIOD = EVAL_PERIOD
 
