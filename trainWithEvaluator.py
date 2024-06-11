@@ -33,19 +33,46 @@ from detectron2.data import build_detection_test_loader
 from utils import savetrainInfo
 
 
-
 class MyTrainer(DefaultTrainer):
     @classmethod
     def build_evaluator(cls, cfg, dataset_name, output_folder=None):
         if output_folder is None:
             output_folder = os.path.join(cfg.OUTPUT_DIR, "inference")
         return COCOEvaluator(dataset_name, cfg, True, output_folder)
-    
 
 
+
+# PARAMETERS & HYPERPARAMETERS CONFIG
 RESUME_TRAINING = False
+SHOW_IMAGE = False
 
 MODEL_DIR = os.getcwd() + "/model"
+
+ARCHITECTURE = "mask_rcnn_R_101_FPN_3x"
+CONFIG_FILE_PATH = f"COCO-InstanceSegmentation/{ARCHITECTURE}.yaml"
+
+NUM_WORKERS = 2
+
+WARMUP_ITERS = 1000
+WARMUP_FACTOR = 1.0 / 1000
+IMS_PER_BATCH = 4
+BASE_LR = 0.00025
+MAX_ITER = 10000 
+STEPS = (3000, 6000) #new
+GAMMA = 0.1 #new
+CHECKPOINT_PERIOD = 1000 #new
+AMP_ENABLED = True #new
+
+BATCH_SIZE_PER_IMAGE = 128
+
+EVAL_PERIOD = 1000
+
+MASK_FORMAT = 'bitmask'
+
+CFG_PATH = os.getcwd() + "/model/IS_cfg.pickle"
+OUTPUT_DIR_PATH = "model/output/instance_segmentation"
+# OUTPUT_DIR_PATH = os.path.join("model", DATA_SET_NAME, ARCHITECTURE, datetime.now().strftime('%Y-%m-%d-%H-%M-%S'))
+
 
 # Delete Model Folder
 if not RESUME_TRAINING:
@@ -103,8 +130,7 @@ register_coco_instances(
 )
 
 
-# DATASET UPLOAD VALIDATION
-# print([ data_set for data_set in MetadataCatalog.list() if data_set.startswith(DATA_SET_NAME)])
+# DATASET UPLOAD VALIDATION (SHOW IMAGE)
 metadata = MetadataCatalog.get(TRAIN_DATA_SET_NAME)
 dataset_train = DatasetCatalog.get(TRAIN_DATA_SET_NAME)
 
@@ -119,9 +145,10 @@ visualizer = Visualizer(
 )
 
 out = visualizer.draw_dataset_dict(dataset_entry)
-plt.figure(figsize = (15, 20))
-plt.imshow(out.get_image())
-plt.show()
+if SHOW_IMAGE:
+    plt.figure(figsize = (15, 20))
+    plt.imshow(out.get_image())
+    plt.show()
 
 
 # SAVE METADATA
@@ -147,38 +174,13 @@ json_object = json.dumps(dictionary, indent=4)
 with open(METADATA_DIR, "w") as outfile:
     outfile.write(json_object)
 
-
-# HYPERPARAMETERS
-ARCHITECTURE = "mask_rcnn_R_101_FPN_3x"
-CONFIG_FILE_PATH = f"COCO-InstanceSegmentation/{ARCHITECTURE}.yaml"
-
-NUM_WORKERS = 2
-
-WARMUP_ITERS = 1000
-WARMUP_FACTOR = 1.0 / 1000
-IMS_PER_BATCH = 4
-BASE_LR = 0.00025
-MAX_ITER = 10000 
-STEPS = (3000, 6000) #new
-GAMMA = 0.1 #new
-CHECKPOINT_PERIOD = 1000 #new
-AMP_ENABLED = True #new
-
-BATCH_SIZE_PER_IMAGE = 128
+# Specifying number of classes
 NUM_CLASSES = len(dictionary["thing_classes"])
 
-EVAL_PERIOD = 1000
-
-CFG_PATH = os.getcwd() + "/model/IS_cfg.pickle"
-
-OUTPUT_DIR_PATH = "model/output/instance_segmentation"
-
-# OUTPUT_DIR_PATH = os.path.join("model", DATA_SET_NAME, ARCHITECTURE, datetime.now().strftime('%Y-%m-%d-%H-%M-%S'))
 os.makedirs(OUTPUT_DIR_PATH, exist_ok=True)
 
 cfg = get_cfg()
 cfg.merge_from_file(model_zoo.get_config_file(CONFIG_FILE_PATH))
-
 cfg.OUTPUT_DIR = OUTPUT_DIR_PATH
 
 
@@ -221,7 +223,7 @@ cfg.MODEL.ROI_HEADS.NUM_CLASSES = NUM_CLASSES
 
 cfg.TEST.EVAL_PERIOD = EVAL_PERIOD
 
-cfg.INPUT.MASK_FORMAT='bitmask'
+cfg.INPUT.MASK_FORMAT= MASK_FORMAT
 
 # SAVE CONFIGS IN PICKLE FILE
 with open(CFG_PATH, "wb") as f:
@@ -249,14 +251,12 @@ savetrainInfo(filename="trained_model_info.txt",
               cfg_path=CFG_PATH)
 
 
-
 # TRAIN MODEL
 trainer = MyTrainer(cfg) 
 trainer.resume_or_load(resume=RESUME_TRAINING)
 trainer.train()
 
-
-# Evaluate on the validation dataset
+# EVALUATE ON THE VALIDATION DATASET
 evaluator = COCOEvaluator(VALID_DATA_SET_NAME, cfg, False, output_dir=cfg.OUTPUT_DIR)
 val_loader = build_detection_test_loader(cfg, VALID_DATA_SET_NAME)
 inference_on_dataset(trainer.model, val_loader, evaluator)
