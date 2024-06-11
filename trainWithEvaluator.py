@@ -22,11 +22,25 @@ from detectron2.utils.visualizer import ColorMode
 from detectron2 import model_zoo
 from detectron2.config import get_cfg
 
+# EVALUATION
+from detectron2.evaluation import COCOEvaluator, inference_on_dataset
+
 # TRAINING
 from detectron2.engine import DefaultTrainer
+from detectron2.data import build_detection_test_loader
 
 
 from saveTrainingInfo import savetrainInfo
+
+
+
+class MyTrainer(DefaultTrainer):
+    @classmethod
+    def build_evaluator(cls, cfg, dataset_name, output_folder=None):
+        if output_folder is None:
+            output_folder = os.path.join(cfg.OUTPUT_DIR, "inference")
+        return COCOEvaluator(dataset_name, cfg, True, output_folder)
+    
 
 
 RESUME_TRAINING = False
@@ -235,11 +249,17 @@ savetrainInfo(filename="trained_model_info.txt",
               cfg_path=CFG_PATH)
 
 
+
 # TRAIN MODEL
-trainer = DefaultTrainer(cfg) 
+trainer = MyTrainer(cfg) 
 trainer.resume_or_load(resume=RESUME_TRAINING)
 trainer.train()
 
+
+# Evaluate on the validation dataset
+evaluator = COCOEvaluator(VALID_DATA_SET_NAME, cfg, False, output_dir=cfg.OUTPUT_DIR)
+val_loader = build_detection_test_loader(cfg, VALID_DATA_SET_NAME)
+inference_on_dataset(trainer.model, val_loader, evaluator)
 
 
 
