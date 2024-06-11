@@ -26,7 +26,7 @@ from detectron2.config import get_cfg
 from detectron2.engine import DefaultTrainer
 
 
-from saveTrainingInfo import savetrainInfo
+from utils import savetrainInfo
 
 
 RESUME_TRAINING = False

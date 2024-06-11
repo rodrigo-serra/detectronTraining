@@ -30,7 +30,7 @@ from detectron2.engine import DefaultTrainer
 from detectron2.data import build_detection_test_loader
 
 
-from saveTrainingInfo import savetrainInfo
+from utils import savetrainInfo
 
 
 
