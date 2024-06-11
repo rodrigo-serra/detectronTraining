@@ -6,6 +6,8 @@
 
 3. How to resume training if needed?
 
-4. Training script output log. [Read it here](trainingOutput.md)
+4. Training script output log. [Read it here](trainingOutputLogs.md)
+
+5. Training script evaluation log. [Read it here](evaluationOutputLogs.md)
 
 

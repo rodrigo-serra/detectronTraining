@@ -1,11 +1,103 @@
-[06/11 13:49:26 d2.utils.events]:  eta: 1:16:33  iter: 3819  total_loss: 0.3269  loss_cls: 0.07985  loss_box_reg: 0.1241  loss_mask: 0.09019  loss_rpn_cls: 0.0009116  loss_rpn_loc: 0.02247  time: 0.7407  data_time: 0.0093  lr: 2.5e-05  max_mem: 3112M
-[06/11 13:49:40 d2.utils.events]:  eta: 1:16:18  iter: 3839  total_loss: 0.3318  loss_cls: 0.08619  loss_box_reg: 0.1248  loss_mask: 0.09859  loss_rpn_cls: 0.001124  loss_rpn_loc: 0.02131  time: 0.7407  data_time: 0.0091  lr: 2.5e-05  max_mem: 3112M
-[06/11 13:49:56 d2.utils.events]:  eta: 1:16:07  iter: 3859  total_loss: 0.3039  loss_cls: 0.07433  loss_box_reg: 0.1178  loss_mask: 0.08786  loss_rpn_cls: 0.0005293  loss_rpn_loc: 0.01802  time: 0.7408  data_time: 0.0092  lr: 2.5e-05  max_mem: 3112M
-[06/11 13:50:11 d2.utils.events]:  eta: 1:15:52  iter: 3879  total_loss: 0.2949  loss_cls: 0.07298  loss_box_reg: 0.1173  loss_mask: 0.08694  loss_rpn_cls: 0.0006397  loss_rpn_loc: 0.01404  time: 0.7409  data_time: 0.0080  lr: 2.5e-05  max_mem: 3112M
-[06/11 13:50:26 d2.utils.events]:  eta: 1:15:33  iter: 3899  total_loss: 0.318  loss_cls: 0.0818  loss_box_reg: 0.1251  loss_mask: 0.08846  loss_rpn_cls: 0.001002  loss_rpn_loc: 0.0192  time: 0.7409  data_time: 0.0091  lr: 2.5e-05  max_mem: 3112M
-[06/11 13:50:41 d2.utils.events]:  eta: 1:15:23  iter: 3919  total_loss: 0.297  loss_cls: 0.07227  loss_box_reg: 0.1116  loss_mask: 0.08816  loss_rpn_cls: 0.0004495  loss_rpn_loc: 0.0184  time: 0.7409  data_time: 0.0094  lr: 2.5e-05  max_mem: 3112M
-[06/11 13:50:56 d2.utils.events]:  eta: 1:15:10  iter: 3939  total_loss: 0.2789  loss_cls: 0.05997  loss_box_reg: 0.1044  loss_mask: 0.08353  loss_rpn_cls: 0.0003235  loss_rpn_loc: 0.01574  time: 0.7411  data_time: 0.0096  lr: 2.5e-05  max_mem: 3112M
-[06/11 13:51:11 d2.utils.events]:  eta: 1:14:56  iter: 3959  total_loss: 0.3088  loss_cls: 0.07896  loss_box_reg: 0.1209  loss_mask: 0.09004  loss_rpn_cls: 0.0009951  loss_rpn_loc: 0.01966  time: 0.7412  data_time: 0.0093  lr: 2.5e-05  max_mem: 3112M
+## 5. Evaluation Output Logs
+
+Depending on the **EVAL_PERIOD** one stablishes, the training proccess will use the validation dataset to perform an evaluation test. The output is usually the one illustrated below.
+
+### Note on the IoU
+
+In the context of object detection and segmentation, IoU (Intersection over Union) is a metric used to evaluate the accuracy of a predicted bounding box or segmentation mask against the ground truth. Intersection over Union (IoU) is defined as the area of overlap between the predicted bounding box (or mask) and the ground truth bounding box (or mask) divided by the area of their union.
+
+Mathematically, it can be expressed as:
+
+<div style="display:flex; justify-content:center;">
+    <img src="../imgs/iou-example.png" width="500">
+</div>
+
+where,
+
+- **Area of Overlap** stands for the area where the predicted bounding box (or mask) overlaps with the ground truth bounding box (or mask);
+
+- **Area of Union** represents the total area covered by both the predicted and ground truth bounding boxes (or masks);
+
+
+Suppose you have a ground truth bounding box and a predicted bounding box. The intersection is the area where both boxes overlap. The union is the total area covered by both boxes together, minus the intersection area (since it is counted twice).
+
+#### Use in Evaluation Metrics
+- AP (Average Precision): The mean of precision values at different recall levels, averaged over multiple IoU thresholds (e.g., from 0.5 to 0.95 in steps of 0.05). A higher AP indicates better model performance.
+- AP50: Average precision at IoU = 0.50. This means a prediction is considered correct if the IoU with the ground truth is at least 0.50.
+- AP75: Average precision at IoU = 0.75. This is a stricter criterion where the prediction is correct only if the IoU is at least 0.75.
+
+
+#### Importance in Object Detection and Segmentation
+- IoU is a crucial metric because it quantifies the accuracy of the predicted bounding boxes and segmentation masks.
+- Higher IoU values indicate better alignment between the predicted and ground truth boxes or masks.
+- Models are typically evaluated at multiple IoU thresholds to ensure they perform well across different levels of strictness.
+
+### Interpretation in Your Evaluation Output
+- AP, AP50, AP75: These metrics reflect the model's precision at different IoU thresholds, showing how well the model's predictions align with the ground truth at both lenient (0.50) and strict (0.75) criteria.
+- APs, APm, APl: These values indicate how well the model performs on small, medium, and large objects, considering the IoU metric to evaluate the overlap quality.
+
+
+
+### BBox Evaluation Metrics
+
+```
+[06/11 13:51:43 d2.evaluation.testing]: copypaste: Task: bbox
+[06/11 13:51:43 d2.evaluation.testing]: copypaste: AP,AP50,AP75,APs,APm,APl
+[06/11 13:51:43 d2.evaluation.testing]: copypaste: 75.6260,90.9271,86.9496,60.3355,78.9204,82.8255
+```
+
+This section provides the Average Precision (AP) metrics for bounding box predictions.
+
+- **AP**: The overall average precision across all Intersection over Union (IoU) thresholds (typically averaged over IoU thresholds from 0.5 to 0.95 in steps of 0.05).
+
+- **AP50**: Average Precision at IoU = 0.50. This is the percentage of true positive detections when the IoU threshold is 0.50.
+
+- **AP75**: Average Precision at IoU = 0.75. This is the percentage of true positive detections when the IoU threshold is 0.75.
+
+- **APs**: Average Precision for small objects.
+
+- **APm**: Average Precision for medium objects.
+
+- **APl**: Average Precision for large objects.
+
+
+### Segmentation Evaluation Metrics
+
+```
+[06/11 13:51:43 d2.evaluation.testing]: copypaste: Task: segm
+[06/11 13:51:43 d2.evaluation.testing]: copypaste: AP,AP50,AP75,APs,APm,APl
+[06/11 13:51:43 d2.evaluation.testing]: copypaste: 76.8922,90.6402,86.7939,60.7884,80.1442,87.2067
+```
+
+This section provides the Average Precision (AP) metrics for instance segmentation predictions.
+
+- **AP**: The overall average precision across all IoU thresholds for segmentation masks.
+
+- **AP50**: Average Precision at IoU = 0.50 for segmentation masks.
+
+- **AP75**: Average Precision at IoU = 0.75 for segmentation masks.
+
+- **APs**: Average Precision for small objects in segmentation masks.
+
+- **APm**: Average Precision for medium objects in segmentation masks.
+
+- **APl**: Average Precision for large objects in segmentation masks.
+
+
+### Interpretation
+
+- **AP (Overall)**: An overall measure of the model's accuracy. For bounding boxes, it's 75.6260 and for segmentation masks, it's 76.8922, in this example. These are good scores, indicating a well-performing model.
+
+- **AP50 and AP75**: Higher values at specific IoU thresholds (90.9271 for AP50 and 86.9496 for AP75 in bbox, 90.6402 for AP50 and 86.7939 for AP75 in segm) suggest the model is very accurate at both loose and strict matching criteria.
+
+- **AP50 and AP75**: Higher values at specific IoU thresholds (90.9271 for AP50 and 86.9496 for AP75 in bbox, 90.6402 for AP50 and 86.7939 for AP75 in segm) suggest the model is very accurate at both loose and strict matching criteria.
+
+- **APs, APm, APl**: Performance across different object sizes. This tells you how well your model performs on small, medium, and large objects. Your model seems to perform well across all sizes but has slightly lower performance on small objects (60.3355 for bbox and 60.7884 for segm).
+
+
+### Full Output Log Example
+
+```
 [06/11 13:51:26 d2.utils.events]:  eta: 1:14:41  iter: 3979  total_loss: 0.3357  loss_cls: 0.08133  loss_box_reg: 0.1264  loss_mask: 0.09609  loss_rpn_cls: 0.0004065  loss_rpn_loc: 0.02069  time: 0.7411  data_time: 0.0083  lr: 2.5e-05  max_mem: 3112M
 WARNING [06/11 13:51:41 d2.data.datasets.coco]: 
 Category ids in annotations are not in [1, #categories]! We'll apply a mapping for you.
@@ -116,4 +208,5 @@ index created!
 [06/11 13:51:43 d2.evaluation.testing]: copypaste: AP,AP50,AP75,APs,APm,APl
 [06/11 13:51:43 d2.evaluation.testing]: copypaste: 76.8922,90.6402,86.7939,60.7884,80.1442,87.2067
 [06/11 13:51:43 d2.utils.events]:  eta: 1:14:25  iter: 3999  total_loss: 0.2861  loss_cls: 0.07012  loss_box_reg: 0.114  loss_mask: 0.08779  loss_rpn_cls: 0.0003539  loss_rpn_loc: 0.01417  time: 0.7411  data_time: 0.0078  lr: 2.5e-05  max_mem: 3112M
+```
 
