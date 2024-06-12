@@ -1,6 +1,16 @@
 #!/usr/bin/env python3
 
 import os
+from roboflow import Roboflow
+
+def downloadDataset():
+    # DOWNLOAD DATASET FROM ROBOFLOW
+    rf = Roboflow(api_key="QO1iBTAWSmIJ28ZyKyVr")
+    project = rf.workspace("socrob").project("testbed_isr")
+    version = project.version(2)
+    dataset = version.download("coco-segmentation")
+    return dataset
+
 
 def savetrainInfo(filename, 
                   dictionary, 

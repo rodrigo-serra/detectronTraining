@@ -1,0 +1,18 @@
+{
+    
+    "RESUME_TRAINING": "False",
+    "SHOW_IMAGE": "False",
+    "ARCHITECTURE": "mask_rcnn_R_101_FPN_3x",
+    "NUM_WORKERS": 2,
+    "WARMUP_ITERS": 1000,
+    "IMS_PER_BATCH": 4,
+    "BASE_LR": 0.00025,
+    "MAX_ITER": 10000,
+    "STEPS": [3000, 6000],
+    "GAMMA": 0.1,
+    "CHECKPOINT_PERIOD": 1000,
+    "AMP_ENABLED": "True",
+    "BATCH_SIZE_PER_IMAGE": 128,
+    "EVAL_PERIOD": 1000,
+    "MASK_FORMAT": "bitmask"
+}

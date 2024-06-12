@@ -26,36 +26,41 @@ from detectron2.config import get_cfg
 from detectron2.engine import DefaultTrainer
 
 
-from utils import savetrainInfo
+from utils import savetrainInfo, downloadDataset
 
 
 # PARAMETERS & HYPERPARAMETERS CONFIG
-RESUME_TRAINING = False
+f = open("config.json")
+train_config = json.load(f)
+
+RESUME_TRAINING = True
+if train_config["RESUME_TRAINING"] == "False":
+    RESUME_TRAINING = False
+
 SHOW_IMAGE = True
+if train_config["SHOW_IMAGE"] == "False":
+    SHOW_IMAGE = False
 
 MODEL_DIR = os.getcwd() + "/model"
-
-ARCHITECTURE = "mask_rcnn_R_101_FPN_3x"
+ARCHITECTURE = train_config["ARCHITECTURE"]
 CONFIG_FILE_PATH = f"COCO-InstanceSegmentation/{ARCHITECTURE}.yaml"
-
-NUM_WORKERS = 2
-
-WARMUP_ITERS = 1000
+NUM_WORKERS = train_config["NUM_WORKERS"]
+WARMUP_ITERS = train_config["WARMUP_ITERS"]
 WARMUP_FACTOR = 1.0 / 1000
-IMS_PER_BATCH = 4
-BASE_LR = 0.00025
-MAX_ITER = 10000 
-STEPS = (3000, 6000) #new
-GAMMA = 0.1 #new
-CHECKPOINT_PERIOD = 1000 #new
-AMP_ENABLED = True #new
+IMS_PER_BATCH = train_config["IMS_PER_BATCH"]
+BASE_LR = train_config["BASE_LR"]
+MAX_ITER = train_config["MAX_ITER"]
+STEPS = (train_config["STEPS"][0], train_config["STEPS"][1])
+GAMMA = train_config["GAMMA"]
+CHECKPOINT_PERIOD = train_config["CHECKPOINT_PERIOD"]
 
-BATCH_SIZE_PER_IMAGE = 128
+AMP_ENABLED = True
+if train_config["AMP_ENABLED"] == "False":
+    AMP_ENABLED = False
 
-EVAL_PERIOD = 1000
-
-MASK_FORMAT = 'bitmask'
-
+BATCH_SIZE_PER_IMAGE = train_config["BATCH_SIZE_PER_IMAGE"]
+EVAL_PERIOD = train_config["EVAL_PERIOD"]
+MASK_FORMAT = train_config["MASK_FORMAT"]
 CFG_PATH = os.getcwd() + "/model/IS_cfg.pickle"
 OUTPUT_DIR_PATH = "model/output/instance_segmentation"
 # OUTPUT_DIR_PATH = os.path.join("model", DATA_SET_NAME, ARCHITECTURE, datetime.now().strftime('%Y-%m-%d-%H-%M-%S'))
@@ -69,13 +74,8 @@ if not RESUME_TRAINING:
 
 
 
-# DOWNLOAD DATASET FROM ROBOFLOW
-# FNR24 Dataset shoes and holding drinks (our version)
-rf = Roboflow(api_key="QO1iBTAWSmIJ28ZyKyVr")
-project = rf.workspace("socrob").project("fnr24-socrob-dataset")
-version = project.version(2)
-dataset = version.download("coco-segmentation")
-
+# DOWNLOAD DATASET
+dataset = downloadDataset()
 
 DATA_SET_NAME = dataset.name.replace(" ", "-")
 ANNOTATIONS_FILE_NAME = "_annotations.coco.json"
