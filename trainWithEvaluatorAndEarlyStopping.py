@@ -6,6 +6,7 @@ import cv2
 import pickle
 import json
 import shutil
+import torch
 
 from roboflow import Roboflow
 import matplotlib.pyplot as plt
@@ -22,11 +23,92 @@ from detectron2.utils.visualizer import ColorMode
 from detectron2 import model_zoo
 from detectron2.config import get_cfg
 
+# EVALUATION
+from detectron2.evaluation import COCOEvaluator, inference_on_dataset
+
 # TRAINING
 from detectron2.engine import DefaultTrainer
+from detectron2.data import build_detection_test_loader
 
 
 from utils import savetrainInfo, downloadDataset
+
+
+
+class HybridEarlyStoppingTrainer(DefaultTrainer):
+    def __init__(self, cfg, patience=5, min_delta=0.001, loss_patience=300, loss_min_delta=0.005):
+        super().__init__(cfg)
+        self.patience = patience
+        self.min_delta = min_delta
+        self.best_metric = None
+        self.metric_counter = 0
+
+        self.loss_patience = loss_patience
+        self.loss_min_delta = loss_min_delta
+        self.best_loss = None
+        self.loss_counter = 0
+
+    def build_evaluator(self, cfg, dataset_name, output_folder=None):
+        if output_folder is None:
+            output_folder = os.path.join(cfg.OUTPUT_DIR, "inference")
+        return COCOEvaluator(dataset_name, cfg, False, output_folder)
+
+    def run_step(self):
+        assert self.model.training, "[Trainer] model was changed to eval mode!"
+        
+        start = torch.cuda.Event(enable_timing=True)
+        end = torch.cuda.Event(enable_timing=True)
+        
+        start.record()
+        
+        if not hasattr(self, '_data_loader_iter'):
+            self._data_loader_iter = iter(self.data_loader)
+        
+        data = next(self._data_loader_iter)
+        loss_dict = self.model(data)
+        losses = sum(loss_dict.values())
+        
+        self.optimizer.zero_grad()
+        losses.backward()
+        self.optimizer.step()
+        
+        end.record()
+        torch.cuda.synchronize()
+        
+        self.storage.put_scalar("time", start.elapsed_time(end) / 1000.0)
+        self.storage.put_scalars(**loss_dict)
+        
+        if self.iter % self.cfg.TEST.EVAL_PERIOD == 0 and self.iter != 0:
+            results = self.test(self.cfg, self.model)
+            metric = results['segm']['AP']  # Using AP for segmentation as an example
+
+            if self.best_metric is None or metric > self.best_metric + self.min_delta:
+                self.best_metric = metric
+                self.metric_counter = 0
+            else:
+                self.metric_counter += 1
+                if self.metric_counter >= self.patience:
+                    print("Early stopping triggered at iteration due to validation metric: ", self.iter)
+                    raise StopIteration
+
+        # Secondary check using training loss
+        current_loss = losses.item()
+        if self.best_loss is None or current_loss < self.best_loss - self.loss_min_delta:
+            self.best_loss = current_loss
+            self.loss_counter = 0
+        else:
+            self.loss_counter += 1
+            if self.loss_counter >= self.loss_patience:
+                print("Early stopping triggered at iteration due to training loss: ", self.iter)
+                raise StopIteration
+
+    @classmethod
+    def test(cls, cfg, model, evaluators=None):
+        if evaluators is None:
+            evaluators = [cls.build_evaluator(cfg, name) for name in cfg.DATASETS.TEST]
+        data_loader = build_detection_test_loader(cfg, cfg.DATASETS.TEST[0])
+        return inference_on_dataset(model, data_loader, evaluators)
+
 
 
 # PARAMETERS & HYPERPARAMETERS CONFIG
@@ -238,11 +320,15 @@ with open(CFG_PATH, "wb") as f:
 #               cfg_path=CFG_PATH)
 
 
-# TRAIN MODEL
-trainer = DefaultTrainer(cfg) 
-trainer.resume_or_load(resume=RESUME_TRAINING)
-trainer.train()
 
+# The rest of your training script remains unchanged, except for using HybridEarlyStoppingTrainer
+trainer = HybridEarlyStoppingTrainer(cfg, patience=5, min_delta=0.001, loss_patience=300, loss_min_delta=0.005)
+trainer.resume_or_load(resume=RESUME_TRAINING   )
+
+try:
+    trainer.train()
+except StopIteration:
+    print("Training stopped early due to early stopping criteria.")
 
 
 

@@ -231,24 +231,24 @@ with open(CFG_PATH, "wb") as f:
 
 
 # SAVE TRAINING INFO
-savetrainInfo(filename="trained_model_info.txt",
-              dictionary=dictionary,
-              cfg=cfg,
-              data_set_name=DATA_SET_NAME,
-              model_dir=MODEL_DIR,
-              train_data_set_name=TRAIN_DATA_SET_NAME,
-              train_data_set_images_dir_path=TRAIN_DATA_SET_IMAGES_DIR_PATH,
-              train_data_set_ann_file_path=TRAIN_DATA_SET_ANN_FILE_PATH,
-              test_data_set_name=TEST_DATA_SET_NAME,
-              test_data_set_images_dir_path=TEST_DATA_SET_IMAGES_DIR_PATH,
-              test_data_set_ann_file_path=TEST_DATA_SET_ANN_FILE_PATH,
-              valid_data_set_name=VALID_DATA_SET_NAME,
-              valid_data_set_images_dir_path=VALID_DATA_SET_IMAGES_DIR_PATH,
-              valid_data_set_ann_file_path=VALID_DATA_SET_ANN_FILE_PATH,
-              metadata_dir=METADATA_DIR,
-              config_file_path=CONFIG_FILE_PATH,
-              output_dir_path=OUTPUT_DIR_PATH,
-              cfg_path=CFG_PATH)
+# savetrainInfo(filename="trained_model_info.txt",
+#               dictionary=dictionary,
+#               cfg=cfg,
+#               data_set_name=DATA_SET_NAME,
+#               model_dir=MODEL_DIR,
+#               train_data_set_name=TRAIN_DATA_SET_NAME,
+#               train_data_set_images_dir_path=TRAIN_DATA_SET_IMAGES_DIR_PATH,
+#               train_data_set_ann_file_path=TRAIN_DATA_SET_ANN_FILE_PATH,
+#               test_data_set_name=TEST_DATA_SET_NAME,
+#               test_data_set_images_dir_path=TEST_DATA_SET_IMAGES_DIR_PATH,
+#               test_data_set_ann_file_path=TEST_DATA_SET_ANN_FILE_PATH,
+#               valid_data_set_name=VALID_DATA_SET_NAME,
+#               valid_data_set_images_dir_path=VALID_DATA_SET_IMAGES_DIR_PATH,
+#               valid_data_set_ann_file_path=VALID_DATA_SET_ANN_FILE_PATH,
+#               metadata_dir=METADATA_DIR,
+#               config_file_path=CONFIG_FILE_PATH,
+#               output_dir_path=OUTPUT_DIR_PATH,
+#               cfg_path=CFG_PATH)
 
 
 
