@@ -54,6 +54,14 @@ STEPS = (train_config["STEPS"][0], train_config["STEPS"][1])
 GAMMA = train_config["GAMMA"]
 CHECKPOINT_PERIOD = train_config["CHECKPOINT_PERIOD"]
 
+USE_WARMUP = False
+if train_config["USE_WARMUP"] == "True":
+    USE_WARMUP = True
+
+USE_AMP = False
+if train_config["USE_AMP"] == "True":
+    USE_AMP = True
+
 AMP_ENABLED = True
 if train_config["AMP_ENABLED"] == "False":
     AMP_ENABLED = False
@@ -195,15 +203,19 @@ cfg.DATASETS.TEST = (VALID_DATA_SET_NAME,)
 
 cfg.DATALOADER.NUM_WORKERS = NUM_WORKERS
 
-cfg.SOLVER.WARMUP_ITERS = WARMUP_ITERS
-cfg.SOLVER.WARMUP_FACTOR = WARMUP_FACTOR
+if USE_WARMUP:
+    cfg.SOLVER.WARMUP_ITERS = WARMUP_ITERS
+    cfg.SOLVER.WARMUP_FACTOR = WARMUP_FACTOR
+
 cfg.SOLVER.IMS_PER_BATCH = IMS_PER_BATCH
 cfg.SOLVER.BASE_LR = BASE_LR
 cfg.SOLVER.MAX_ITER = MAX_ITER
 cfg.SOLVER.STEPS = STEPS
 cfg.SOLVER.GAMMA = GAMMA
 cfg.SOLVER.CHECKPOINT_PERIOD = CHECKPOINT_PERIOD
-cfg.SOLVER.AMP.ENABLED = AMP_ENABLED
+
+if USE_AMP:
+    cfg.SOLVER.AMP.ENABLED = AMP_ENABLED
 
 cfg.MODEL.ROI_HEADS.BATCH_SIZE_PER_IMAGE = BATCH_SIZE_PER_IMAGE
 cfg.MODEL.ROI_HEADS.NUM_CLASSES = NUM_CLASSES
@@ -218,24 +230,25 @@ with open(CFG_PATH, "wb") as f:
 
 
 # SAVE TRAINING INFO
-# savetrainInfo(filename="trained_model_info.txt",
-#               dictionary=dictionary,
-#               cfg=cfg,
-#               data_set_name=DATA_SET_NAME,
-#               model_dir=MODEL_DIR,
-#               train_data_set_name=TRAIN_DATA_SET_NAME,
-#               train_data_set_images_dir_path=TRAIN_DATA_SET_IMAGES_DIR_PATH,
-#               train_data_set_ann_file_path=TRAIN_DATA_SET_ANN_FILE_PATH,
-#               test_data_set_name=TEST_DATA_SET_NAME,
-#               test_data_set_images_dir_path=TEST_DATA_SET_IMAGES_DIR_PATH,
-#               test_data_set_ann_file_path=TEST_DATA_SET_ANN_FILE_PATH,
-#               valid_data_set_name=VALID_DATA_SET_NAME,
-#               valid_data_set_images_dir_path=VALID_DATA_SET_IMAGES_DIR_PATH,
-#               valid_data_set_ann_file_path=VALID_DATA_SET_ANN_FILE_PATH,
-#               metadata_dir=METADATA_DIR,
-#               config_file_path=CONFIG_FILE_PATH,
-#               output_dir_path=OUTPUT_DIR_PATH,
-#               cfg_path=CFG_PATH)
+savetrainInfo(filename="trained_model_info.txt",
+              dictionary=dictionary,
+              cfg=cfg,
+              data_set_name=DATA_SET_NAME,
+              model_dir=MODEL_DIR,
+              train_data_set_name=TRAIN_DATA_SET_NAME,
+              train_data_set_images_dir_path=TRAIN_DATA_SET_IMAGES_DIR_PATH,
+              train_data_set_ann_file_path=TRAIN_DATA_SET_ANN_FILE_PATH,
+              test_data_set_name=TEST_DATA_SET_NAME,
+              test_data_set_images_dir_path=TEST_DATA_SET_IMAGES_DIR_PATH,
+              test_data_set_ann_file_path=TEST_DATA_SET_ANN_FILE_PATH,
+              valid_data_set_name=VALID_DATA_SET_NAME,
+              valid_data_set_images_dir_path=VALID_DATA_SET_IMAGES_DIR_PATH,
+              valid_data_set_ann_file_path=VALID_DATA_SET_ANN_FILE_PATH,
+              metadata_dir=METADATA_DIR,
+              config_file_path=CONFIG_FILE_PATH,
+              output_dir_path=OUTPUT_DIR_PATH,
+              cfg_path=CFG_PATH,
+              train_config=train_config)
 
 
 # TRAIN MODEL
