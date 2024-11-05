@@ -5,12 +5,18 @@ from roboflow import Roboflow
 
 def downloadDataset():
     # DOWNLOAD DATASET FROM ROBOFLOW
-    rf = Roboflow(api_key="QO1iBTAWSmIJ28ZyKyVr")
-    project = rf.workspace("socrob").project("testbed_isr")
-    version = project.version(2)
-    dataset = version.download("coco-segmentation")
-    return dataset
 
+    # rf = Roboflow(api_key="QO1iBTAWSmIJ28ZyKyVr")
+    # project = rf.workspace("socrob").project("robocup2024-kakqe")
+    # version = project.version(5)
+    # dataset = version.download("coco-segmentation")
+
+    rf = Roboflow(api_key="y89YpC5cZeg7ZOlBJbJW")
+    project = rf.workspace("socrobdatasets").project("merged-dataset-robocup-2024-v2")
+    version = project.version(1)
+    dataset = version.download("coco-segmentation")
+
+    return dataset
 
 def savetrainInfo(filename, 
                   dictionary, 

@@ -97,7 +97,6 @@ if not RESUME_TRAINING:
 
 # DOWNLOAD DATASET
 dataset = downloadDataset()
-
 DATA_SET_NAME = dataset.name.replace(" ", "-")
 ANNOTATIONS_FILE_NAME = "_annotations.coco.json"
 

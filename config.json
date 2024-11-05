@@ -1,5 +1,4 @@
 {
-    
     "RESUME_TRAINING": "False",
     "SHOW_IMAGE": "False",
     "ARCHITECTURE": "mask_rcnn_R_101_FPN_3x",

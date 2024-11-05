@@ -1,0 +1,91 @@
+## MAX_ITER = 90000
+
+{
+    
+    "RESUME_TRAINING": "False",
+    "SHOW_IMAGE": "False",
+    "ARCHITECTURE": "mask_rcnn_R_101_FPN_3x",
+    "NUM_WORKERS": 2,
+    "USE_WARMUP": "False",
+    "WARMUP_ITERS": 1000,
+    "IMS_PER_BATCH": 4,
+    "BASE_LR": 0.00025,
+    "MAX_ITER": 90000,
+    "STEPS": [30000, 60000],
+    "GAMMA": 0.1,
+    "CHECKPOINT_PERIOD": 9000,
+    "USE_AMP": "False",
+    "AMP_ENABLED": "False",
+    "BATCH_SIZE_PER_IMAGE": 128,
+    "EVAL_PERIOD": 9000,
+    "MASK_FORMAT": "bitmask"
+}
+
+## MAX_ITER = 100000
+
+{
+    
+    "RESUME_TRAINING": "False",
+    "SHOW_IMAGE": "False",
+    "ARCHITECTURE": "mask_rcnn_R_101_FPN_3x",
+    "NUM_WORKERS": 2,
+    "USE_WARMUP": "False",
+    "WARMUP_ITERS": 1000,
+    "IMS_PER_BATCH": 4,
+    "BASE_LR": 0.00025,
+    "MAX_ITER": 100000,
+    "STEPS": [33333, 66666],
+    "GAMMA": 0.1,
+    "CHECKPOINT_PERIOD": 10000,
+    "USE_AMP": "False",
+    "AMP_ENABLED": "False",
+    "BATCH_SIZE_PER_IMAGE": 128,
+    "EVAL_PERIOD": 10000,
+    "MASK_FORMAT": "bitmask"
+}
+
+
+## MAX_ITER = 9000
+
+{
+    
+    "RESUME_TRAINING": "False",
+    "SHOW_IMAGE": "False",
+    "ARCHITECTURE": "mask_rcnn_R_101_FPN_3x",
+    "NUM_WORKERS": 2,
+    "USE_WARMUP": "False",
+    "WARMUP_ITERS": 900,
+    "IMS_PER_BATCH": 4,
+    "BASE_LR": 0.00025,
+    "MAX_ITER": 9000,
+    "STEPS": [3000, 6000],
+    "GAMMA": 0.1,
+    "CHECKPOINT_PERIOD": 1000,
+    "USE_AMP": "False",
+    "AMP_ENABLED": "False",
+    "BATCH_SIZE_PER_IMAGE": 128,
+    "EVAL_PERIOD": 1000,
+    "MASK_FORMAT": "bitmask"
+}
+
+## MAX_ITER = 30000
+
+{
+    "RESUME_TRAINING": "False",
+    "SHOW_IMAGE": "False",
+    "ARCHITECTURE": "mask_rcnn_R_101_FPN_3x",
+    "NUM_WORKERS": 2,
+    "USE_WARMUP": "False",
+    "WARMUP_ITERS": 1000,
+    "IMS_PER_BATCH": 4,
+    "BASE_LR": 0.00025,
+    "MAX_ITER": 30000,
+    "STEPS": [10000, 20000],
+    "GAMMA": 0.1,
+    "CHECKPOINT_PERIOD": 3000,
+    "USE_AMP": "False",
+    "AMP_ENABLED": "False",
+    "BATCH_SIZE_PER_IMAGE": 128,
+    "EVAL_PERIOD": 3000,
+    "MASK_FORMAT": "bitmask"
+}

@@ -5,6 +5,8 @@ import os
 import csv
 import json
 import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
 
 # PARAMETERS & HYPERPARAMETERS CONFIG
 f = open("config.json")
@@ -124,3 +126,72 @@ with open(filename, mode='r') as csvfile:
         file.write("## EVAL PERIOD RESULTS (metrics_analyse.csv):\n")
         file.writelines(file_contents_str)
         file.write("\n")
+
+
+## PLOT RESULTS TO A GET BETTER IDEA OF THE RESULTS
+# Step 1: Create a dir to save plots
+plots_dir = os.getcwd() + '/model/plots'
+os.makedirs(plots_dir, exist_ok=True)
+
+# Step 2: Convert the data to a DataFrame
+df = pd.DataFrame(training_res)
+
+# Step 3: Plot the Data
+# Plot total loss over iterations
+plt.figure(figsize=(12, 6))
+plt.plot(df['iteration'], df['total_loss'], label='Total Loss', color='blue')
+plt.xlabel('Iteration')
+plt.ylabel('Total Loss')
+plt.title('Total Loss over Iterations')
+plt.legend()
+plt.savefig(os.path.join(plots_dir, 'total_loss_over_iterations.png'))
+plt.close()
+
+# Plot average precision over iterations
+plt.figure(figsize=(12, 6))
+plt.plot(df['iteration'], df['fast_rcnn/cls_accuracy'], label='Fast R-CNN Classification Accuracy', color='green')
+plt.plot(df['iteration'], df['mask_rcnn/accuracy'], label='Mask R-CNN Accuracy', color='red')
+plt.xlabel('Iteration')
+plt.ylabel('Accuracy')
+plt.title('Accuracy over Iterations')
+plt.legend()
+plt.savefig(os.path.join(plots_dir, 'accuracy_over_iterations.png'))
+plt.close()
+
+# Additional Plots: False Negatives and Positives
+
+# Plot False Negatives over iterations
+plt.figure(figsize=(12, 6))
+plt.plot(df['iteration'], df['mask_rcnn/false_negative'], label='Mask R-CNN False Negative', color='purple')
+plt.plot(df['iteration'], df['fast_rcnn/false_negative'], label='Fast R-CNN False Negative', color='orange')
+plt.xlabel('Iteration')
+plt.ylabel('False Negative')
+plt.title('False Negatives over Iterations')
+plt.legend()
+plt.savefig(os.path.join(plots_dir, 'false_negatives_over_iterations.png'))
+plt.close()
+
+# Plot False Positives over iterations
+plt.figure(figsize=(12, 6))
+plt.plot(df['iteration'], df['mask_rcnn/false_positive'], label='Mask R-CNN False Positive', color='brown')
+plt.xlabel('Iteration')
+plt.ylabel('False Positive')
+plt.title('False Positives over Iterations')
+plt.legend()
+plt.savefig(os.path.join(plots_dir, 'false_positives_over_iterations.png'))
+plt.close()
+
+# Plot Loss Components
+components = ['loss_box_reg', 'loss_cls', 'loss_mask', 'loss_rpn_cls', 'loss_rpn_loc']
+plt.figure(figsize=(12, 12))
+for i, component in enumerate(components, 1):
+    plt.subplot(len(components), 1, i)
+    plt.plot(df['iteration'], df[component], label=component)
+    plt.xlabel('Iteration')
+    plt.ylabel(component)
+    plt.title(f'{component} over Iterations')
+    plt.legend()
+
+plt.tight_layout()
+plt.savefig(os.path.join(plots_dir, 'loss_components_over_iterations.png'))
+plt.close()
